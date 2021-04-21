@@ -7,6 +7,7 @@ class TabelaHash
 private:
   int contaElem;
   static constexpr int tam = 10;
+  static constexpr int limite = 50;
   int tabela[tam];
 
 public:
@@ -15,7 +16,6 @@ public:
   {
     for (int i = 0; i < this->tam; i++)
       this->tabela[i] = -1;
-
     this->contaElem = 0;
   }
 
@@ -35,11 +35,11 @@ public:
 
   int quadraticProbing(int e, int p)
   {
-    int limite = 50, i = 1, novaP = -1;
+    int i = 1, novaP = -1;
 
-    while (i <= limite)
-    {
-      novaP = this->hashing(p + (int)pow(i, 2));
+    while (i <= this->limite)
+    { 
+      novaP = this->hashing(p + (int)pow(i, 2)); 
       if (this->tabela[novaP] == -1)
         break;
       else
@@ -53,7 +53,7 @@ public:
   {
     int p;
 
-    if (this->isFull())
+    if (this->isFull()) 
     {
       cout << "A tabela está cheia" << endl;
       return;
@@ -107,7 +107,7 @@ public:
 int main()
 {
   auto *t = new TabelaHash;
-  int elem = 0, keys[] = {2, 12, 22, 32}, tam = sizeof(keys) / sizeof(*keys);
+  int elem = 0, keys[] = {2, 12, 22, 32, 31}, tam = sizeof(keys) / sizeof(*keys);
 
   // for para inserção dos elementos na tabela hash
   for(int i = 0; i < tam; i++) {
