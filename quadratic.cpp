@@ -1,13 +1,18 @@
 #include <iostream>
 #include <math.h>
+#include <time.h>
+#include "./includes/color.hpp"
+
 using namespace std;
+using namespace color;
+using namespace style;
 
 class TabelaHash
 {
 private:
   int contaElem;
   static constexpr int tam = 10;
-  static constexpr int limite = 50;
+  static constexpr int limite = 20;
   int tabela[tam];
 
 public:
@@ -19,7 +24,7 @@ public:
     this->contaElem = 0;
   }
 
-  // verifica se a tabela está cheia
+  // verifica se a tabela esta cheia
   bool isFull()
   {
     if (this->contaElem >= this->tam)
@@ -27,24 +32,35 @@ public:
     return false;
   }
 
-  // retorna a posição do elemento
+  // retorna a posicao do elemento
   int hashing(int e)
   {
     return e % this->tam;
   }
 
-  int quadraticProbing(int e, int p)
+  int quadraticProbing(int e, int p, char op)
   {
     int i = 1, novaP = -1;
 
     while (i <= this->limite)
     { 
-      novaP = this->hashing(p + (int)pow(i, 2)); 
-      if (this->tabela[novaP] == -1)
-        break;
-      else
-        i++;
-        cout << "Ocorreu uma colisão do elemento " << e << " na posição " << novaP << ". Buscando uma nova posição..." << endl;
+      novaP = this->hashing(p + (int)pow(i, 2));
+      if(op == 'I') {
+        if (this->tabela[novaP] == -1)
+          break;
+        else {
+          i++;
+          if(op == 'I') {
+            coutc("COLISAO: ", fRED);
+            cout << "Elemento " << e << " na posicao " << novaP << ". Buscando uma nova posicao..." << endl;
+          }
+        }
+      } else if(op == 'B') {
+        if (this->tabela[novaP] == e)
+          break;
+        else
+          i++;
+      }
     }
     return novaP;
   }
@@ -55,7 +71,7 @@ public:
 
     if (this->isFull()) 
     {
-      cout << "A tabela está cheia" << endl;
+      cout << "A tabela esta cheia" << endl;
       return;
     }
 
@@ -64,17 +80,20 @@ public:
     if (this->tabela[p] == -1)
     {
       this->tabela[p] = e;
-      cout << "Elemento " << e << " armazenado na posição " << p << endl;
+	  coutc("SUCESSO: ", fGREEN);
+      cout << "Elemento " << e << " armazenado na posicao " << p << endl;
     }
     else
     {
-      cout << "Ocorreu uma colisão do elemento " << e << " na posição " << p << ". Buscando uma nova posição..." << endl;
-      p = quadraticProbing(e, p);
+      coutc("COLISAO: ", fRED);
+      cout << "Elemento " << e << " na posicao " << p << ". Buscando uma nova posicao..." << endl;
+      p = quadraticProbing(e, p, 'I');
 
-      if (p != -1)
+      if (p != -1 && this->tabela[p] == -1)
       {
         this->tabela[p] = e;
-        cout << "Elemento " << e << " armazenado na posição " << p << endl;
+	    coutc("SUCESSO: ", fGREEN);
+        cout << "Elemento " << e << " armazenado na posicao " << p << endl;
       }
     }
     return;
@@ -83,10 +102,47 @@ public:
   // função exibe a tabela
   void exibe()
   {
+    coutc("TABELA: ", fYELLOW);
     for (int i = 0; i < this->tam; i++)
     {
       if(this->tabela[i] == -1) cout << " | [" << i <<"] VAZIO";
       else cout << " | [" << i <<"] " << this->tabela[i];
+    }
+    cout << " |" << endl;
+  }
+
+  int busca(int e) {
+    bool match = false;
+    int p = this->hashing(e);
+
+    if(this->tabela[p] == e) {
+      match = true;
+          coutc("BUSCA: ", fBLUE);
+          cout << "A posicao do elemento " << e << " na tabela hash: " << p << endl;
+      return p;
+    } else {
+      int novaP = -1;
+        novaP = quadraticProbing(e, p, 'B');
+        if(this->tabela[novaP] == e) {
+          match = true;
+          coutc("BUSCA: ", fBLUE);
+          cout << "A posicao do elemento " << e << " na tabela hash: " << novaP << endl;
+          return novaP;
+        }
+    }
+    coutc("BUSCA: ", fRED);
+    cout << "Elemento " << e << " nao pertence a tabela hash." << endl;
+    return -1;
+  }
+
+  void remove(int e) {
+    coutc("(REMOCAO)", fREDs);
+    int p = this->busca(e);
+    if(p != -1) {
+      this->tabela[p] = -1;
+      this->contaElem--;
+      coutc("REMOCAO: ", fREDs);
+      cout << "Elemento " << e << " removido da tabela hash." << endl;
     }
   }
 
@@ -107,23 +163,43 @@ public:
 int main()
 {
   auto *t = new TabelaHash;
-  int elem = 0, keys[] = {2, 12, 22, 32, 31}, tam = sizeof(keys) / sizeof(*keys);
+  int elem = 0, keys[] = {2, 12, 22, 32, 42, 52, 62}, tam = sizeof(keys) / sizeof(*keys);
+  clock_t tempo; //variável para armazenar tempo
 
-  // for para inserção dos elementos na tabela hash
+  // for para INSERCAO dos elementos na tabela hash
   for(int i = 0; i < tam; i++) {
+    tempo = clock(); //armazena tempo
     t->insere(keys[i]);
+    tempo = clock() - tempo; //tempo final - tempo inicial
       if (!t->isFull())
       {
         elem++;
         t->setConta(elem);
       }
+    coutc("INSERCAO: ", fCYAN);
+    cout << ((double)tempo)/((CLOCKS_PER_SEC/1000)) << "ms" << endl;
+    cout << "\n";
   }
 
   // exibe tabela
   t->exibe();
 
   //exibe número de elementos na tabela
-  cout << "\n\nO número de elementos na tabela é: " << t->getElementos();
+  coutc("ELEMENTOS: ", fYELLOWs);
+  cout << t->getElementos() << "\n" << endl;
+
+  t->busca(32);
+  t->busca(0);
+  t->busca(22);
+  cout << endl;
+  t->remove(12);
+  cout << endl;
+  t->remove(0);
+
+  // exibe tabela
+  t->exibe();
+  coutc("ELEMENTOS: ", fYELLOWs);
+  cout << t->getElementos() << "\n" << endl;
 
   return 0;
 }
