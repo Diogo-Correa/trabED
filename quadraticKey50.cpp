@@ -1,19 +1,20 @@
 #include "./includes/TabelaHash.hpp"
 
+
 int main()
-{
+{ 
+  int randKeysQtd = 50;
+  srand(time(NULL)); // Semente para criação dos numeros aleatórios
+
   clock_t tempoExecucao; 
   tempoExecucao = clock(); // Variavel para armazenar tempo inicial de execução do Programa
-
   auto *t = new TabelaHash;
-  int keys[] = {2, 12, 22, 32, 42, 52, 62, 72, 82, 92, 102, 202}, tam = sizeof(keys) / sizeof(*keys);
   clock_t tempo; //variável para armazenar tempo
 
-  // for para INSERCAO dos elementos na tabela hash
-  for (int i = 0; i < tam; i++)
-  {
-    tempo = clock(); //armazena tempo
-    t->insere(keys[i]);
+// for para INSERCAO dos elementos na tabela hash
+  for (int i = 0; i < randKeysQtd; i++ ){
+    tempo = clock();
+    t->insere(rand() % randKeysQtd);
     tempo = clock() - tempo; //tempo final - tempo inicial
     coutc("INSERCAO: ", fCYAN);
     cout << ((double)tempo) / ((CLOCKS_PER_SEC / 1000)) << "ms" << endl;

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <math.h>
-#include <time.h>
+#include <ctime>
 #include "./color.hpp"
 
 using namespace std;
@@ -11,7 +11,7 @@ class TabelaHash
 {
   private:
     int contaElem;
-    static constexpr int tam = 10;
+    static constexpr int tam = 100;
     static constexpr int limite = 20;
     int tabela[tam];
 
