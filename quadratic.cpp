@@ -2,6 +2,9 @@
 
 int main()
 {
+  clock_t tempoExecucao; 
+  tempoExecucao = clock(); // Variavel para armazenar tempo inicial de execução do Programa
+
   auto *t = new TabelaHash;
   int keys[] = {2, 12, 22, 32, 42, 52, 62, 72, 82, 92, 102, 202}, tam = sizeof(keys) / sizeof(*keys);
   clock_t tempo; //variável para armazenar tempo
@@ -40,5 +43,8 @@ int main()
   cout << t->getElementos() << endl
        << endl;
 
+  tempoExecucao = clock() - tempoExecucao; 
+  coutc("TEMPO DE EXECUCAO: ", fCYANs);
+  cout << ((double)tempoExecucao) / ((CLOCKS_PER_SEC / 100)) << " seg" << endl;
   return 0;
 }
