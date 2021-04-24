@@ -9,11 +9,11 @@ using namespace style;
 
 class TabelaHash
 {
-private:
-  int contaElem;
-  static constexpr int tam = 10;
-  static constexpr int limite = 20;
-  int tabela[tam];
+  private:
+    int contaElem;
+    static constexpr int tam = 10;
+    static constexpr int limite = 20;
+    int tabela[tam];
 
 public:
   // inicia tabela
@@ -27,7 +27,7 @@ public:
   // verifica se a tabela esta cheia
   bool isFull()
   {
-    if (this->contaElem >= this->tam)
+    if (this->contaElem == this->tam)
       return true;
     return false;
   }
@@ -45,6 +45,7 @@ public:
     while (i <= this->limite)
     {
       novaP = this->hashing(p + (int)pow(i, 2));
+
       if (op == 'I')
       {
         if (this->tabela[novaP] == -1)
@@ -67,6 +68,7 @@ public:
           i++;
       }
     }
+
     return novaP;
   }
 
@@ -123,6 +125,9 @@ public:
   int busca(int e)
   {
     bool match = false;
+    clock_t tempo_busca; //variável para armazenar tempo
+
+    tempo_busca = clock(); //armazena tempo
     int p = this->hashing(e);
 
     if (this->tabela[p] == e)
@@ -130,6 +135,11 @@ public:
       match = true;
       coutc("BUSCA: ", fBLUE);
       cout << "A posicao do elemento " << e << " na tabela hash: " << p << endl;
+
+      tempo_busca = clock() - tempo_busca; //tempo final - tempo inicial
+      coutc("BUSCA: ", fCYAN);
+      cout << ((double)tempo_busca) / ((CLOCKS_PER_SEC / 1000)) << "ms" << endl;
+
       return p;
     }
     else
@@ -141,12 +151,18 @@ public:
         match = true;
         coutc("BUSCA: ", fBLUE);
         cout << "A posicao do elemento " << e << " na tabela hash: " << novaP << endl;
+
+        tempo_busca = clock() - tempo_busca; //tempo final - tempo inicial
+        coutc("BUSCA: ", fCYAN);
+        cout << ((double)tempo_busca) / ((CLOCKS_PER_SEC / 1000)) << "ms" << endl;
         return novaP;
       }
     }
     coutc("BUSCA: ", fMAGENTA);
-    cout << "Elemento " << e << " nao pertence a tabela hash." << endl
-         << endl;
+    cout << "Elemento " << e << " nao pertence a tabela hash." << endl;
+    tempo_busca = clock() - tempo_busca; //tempo final - tempo inicial
+    coutc("BUSCA: ", fCYAN);
+    cout << ((double)tempo_busca) / ((CLOCKS_PER_SEC / 1000)) << "ms" << endl;
     return -1;
   }
 
@@ -165,14 +181,7 @@ public:
       tempo = clock() - tempo; //tempo final - tempo inicial
       coutc("REMOCAO: ", fCYAN);
       cout << ((double)tempo) / ((CLOCKS_PER_SEC / 1000)) << "ms" << endl;
-      cout << endl;
     }
-  }
-
-  //
-  void setConta(int x)
-  {
-    this->contaElem = x;
   }
 
   // retorna o total de elementos da tabela

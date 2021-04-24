@@ -3,7 +3,7 @@
 int main()
 {
   auto *t = new TabelaHash;
-  int keys[] = {2, 12, 22, 32, 42, 52, 62}, tam = sizeof(keys) / sizeof(*keys);
+  int keys[] = {2, 12, 22, 32, 42, 52, 62, 72, 82, 92, 102, 202}, tam = sizeof(keys) / sizeof(*keys);
   clock_t tempo; //variável para armazenar tempo
 
   // for para INSERCAO dos elementos na tabela hash
@@ -27,11 +27,13 @@ int main()
 
   t->busca(32);
   t->busca(0);
-  t->busca(22);
-  cout << endl;
+  t->busca(50210);
+  
   t->remove(12);
   t->remove(0);
 
+  cout << endl;
+  
   // exibe tabela
   t->exibe();
   coutc("ELEMENTOS: ", fYELLOWs);
