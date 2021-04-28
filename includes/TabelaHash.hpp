@@ -10,10 +10,8 @@ using namespace style;
 class TabelaHash
 {
   private:
-    int contaElem;
-    static constexpr int tam = 100;
-    static constexpr int limite = 20;
-    int tabela[tam];
+    static constexpr int tam = 11;
+    int contaElem , limite = 20, tabela[tam];
 
 public:
   // inicia tabela
@@ -46,9 +44,7 @@ public:
     {
       novaP = this->hashing(p + (int)pow(i, 2));
 
-      if (op == 'I')
-      {
-        if (this->tabela[novaP] == -1)
+        if (this->tabela[novaP] == (op == 'I' ? -1 : e))
           break;
         else
         {
@@ -59,14 +55,6 @@ public:
             cout << "Elemento " << e << " na posicao " << novaP << ". Buscando uma nova posicao..." << endl;
           }
         }
-      }
-      else if (op == 'B')
-      {
-        if (this->tabela[novaP] == e)
-          break;
-        else
-          i++;
-      }
     }
 
     return novaP;
